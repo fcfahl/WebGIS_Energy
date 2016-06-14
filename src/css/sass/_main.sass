@@ -1,0 +1,119 @@
+$baseColor: #2B3856
+$mainColor: #eee
+$groupColor: rgb(85, 85, 85)
+
+
+$heightPage: 100%
+$widthPage: 100%
+$heightHeader: 70px
+$heightFooter: 15px
+$heightTabs: 40px
+$heightSettings: 45px
+
+$heightMain: calc(#{$heightPage} - (#{$heightHeader} + #{$heightFooter} ))
+
+$widthSide: 300px
+
+$lineDivision: solid rgb(85, 85, 85) 1px
+// $lineDivision: solid white 0.5px
+
+*
+    box-sizing: border-box
+    margin: 0
+    padding: 0
+    // overflow: hidden
+
+html, body
+    width: 100%
+    height: 100%
+    overflow: hidden
+
+    .hidden
+        display: none
+
+    .container-fluid
+        display: flex
+        flex-direction: column
+        height: 100%
+        margin: 0
+        padding: 0
+        overflow: hidden
+
+        header
+            display: flex
+            flex-direction: row
+            align-items: center
+            align-content: space-around
+            height: $heightHeader
+
+            .title
+                flex-grow: 1
+
+        #main
+            display: flex
+            flex-direction: row
+            height: $heightMain
+            flex: 1 0 auto
+            overflow: hidden
+
+            #side
+                display: flex
+                flex-direction: column
+                width: $widthSide
+
+                .tabs
+                    height: $heightTabs
+
+                .pannel
+                    flex: 1
+                    overflow-y: scroll
+                    overflow-x: hidden
+
+                    #WMS_external
+                        display: flex
+                        flex-direction: column
+                        align-items: center
+                        justify-content: center
+
+                        .getCapabilities
+                            align-items: left
+
+                        .custom_Layers
+                            align-items: left
+
+                    #geotag
+                        display: flex
+                        flex-direction: row
+                        justify-content: center
+                        align-items: center
+                        align-content: space-around
+
+                        .switch_photo
+                            padding: 0 10px
+                            align-items: center
+                            height: $heightSettings
+                            width: 80px
+                            // font-size: 0.4em
+                        .fa-cogs
+                            padding-left: 10px
+
+                        span
+                            font-size: 0.9em
+
+                .settings
+                    display: flex
+                    flex-direction: column
+                    justify-content: center
+                    align-items: center
+
+
+
+
+
+            #map
+                background: white
+                flex-grow: 1
+
+
+        footer
+            height: $heightFooter
