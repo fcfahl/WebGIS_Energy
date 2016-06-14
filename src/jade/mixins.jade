@@ -41,60 +41,7 @@ mixin accorde(section,group)
                   label(for=ID)
                     span=NM
 
-        if group == 'WMS_external'
-            .getCapabilities
-                form(class="form-inline")
-                    div(class="form-group")
-                        label(class="sr-only" for="form_capabilities" WMS Get Capabilities)
-                        input(type="text", class="form-control form-control", id="wms_capability", placeholder="enter getcapabilities address", value="http://wms.pcn.minambiente.it/ogc?map=/ms_ogc/WMS_v1.3/Vettoriali/Carta_ecopedologica.map&service=wms&request=getCapabilities&version=1.3.0")
-
-                        //- http://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/Urban_Atlas_2012/MapServer/WMSServer?service=WMS&request=GetCapabilities&version=1.3.0
-
-                    button(type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalWindow" id="wms_submit") Submit
-
-                    +wms_Modal
             
-            .custom_Layers
-
-        if group == 'geotag'
-            +switch_button("Flickr") 
-            +switch_button("Panoramio") 
-            +switch_button("Geograph") 
-            i(class="fa fa-cogs" aria-hidden="true")
-            
-mixin wms_Modal()
-    .wmsModal
-        div(class="modal fade"  id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
-            div(class="modal-dialog modal-sm" role="document")
-                div(class="modal-content")
-                    div(class="modal-header")
-                        button(type="button" class="close" data-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") &times;
-                        h2 Available WMS Layers
-                    div(class="modal-body")
-                        .wmsList
-                            ul(class="list-group")
-                            
-
-                    div(class="modal-footer")
-                        button(type="button" class="btn btn-secondary " id="wms_close" data-dismiss="modal") Close
-                        button(type="button" class="btn btn-primary" id="wms_add"  data-dismiss="modal") Add Selected Layers
-    
-
-
-
-mixin switch_button(name)
-
-    .switch_photo
-        label.switch-light(onclick="" )
-            input(class="switch_toogle" type="checkbox" value=name) 
-            strong #{name}
-
-            span.well
-                span Off
-                span On
-                a.btn.btn-primary
-
 mixin legend_boot(section,sort)
   //- read db.json
   - var obj = locals[0].Layers
@@ -121,7 +68,6 @@ mixin legend_boot(section,sort)
             
             if legend == "yes"
                 img(src=ref alt=NM width="280px")  
-                +mk_legend(layer.ID)
 
 mixin table_boot(section,sort)
 
@@ -160,27 +106,7 @@ mixin mk_table (ID)
         table(id=table_ID class="table table-striped table-bordered table-hover table-sm" cellspacing="0" width="50%")
             tbody
                 each val, key in layer
-                  if key !== 'Type' && key !== 'Legend' && key !== 'Category_ID' && key !== 'Category'  && key !== 'Dataset'  && key !== 'ID'   && val !== '' 
+                  if key !== 'Type' && key !== 'Legend' && key !== 'Category_ID' && key !== 'Category'  && key !== 'Style' && key !== 'Dataset'  && key !== 'ID'   && val !== '' 
                     tr(class="table_row")
                         td #{key}
                         td #{val}
-
-
-mixin mk_legend (ID)
-
-    //- read db.json
-    - var obj = locals[0].Legend
-    - var layers = locals[0].Layers
-
-    each description, color in obj[0].GLC_00
-    
-        each layer in layers
-            - var legend = layer.ID
-            //- - var map = "obj."  +   layer.ID 
-            - var map = obj.GLC_00 
-            if ID == legend
-                div(style= "width:10px;height:10px;border:1px; background " + color + ";") #{description}
-
-//- legend = data[0].Legend;
-//- 
-//- console.log(legend[0].GLC_00);

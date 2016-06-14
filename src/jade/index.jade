@@ -5,7 +5,7 @@ doctype html
 html(lang="en")
 
     head
-        title "LULC Maps of Europe"
+        title "Geospatial Information for Biomass Resources in the European Union"
         meta(name="keywords" content=".....")
         meta(name="author" content="Fernando Fahl")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
@@ -61,9 +61,9 @@ html(lang="en")
             header
                 .logo
                     a(href="javascript:void(0)")
-                        img(src="img/logo/logo_polimi_white.png" alt="Logo Image")
+                        img(src="img/logo/JRC/jrc.svg" alt="Logo Image")
                 .title
-                    h2 Land Use and Land Cover Maps of Europe
+                    h2 Geospatial Information for Biomass Resources in the European Union
 
             #main
                 #side
@@ -80,9 +80,14 @@ html(lang="en")
                                 //- Accordion and layers parameters
                                 #accordion
                                     +accorde('Administrative Layers', 'adm')
+                                    +accorde('Topography', 'topo')
+                                    +accorde('Infrastructure', 'infra')
                                     +accorde('Land Cover Layers', 'lulc')
-                                    +accorde('Photo Services', 'geotag')
-                                    +accorde('External WMS Layers', 'WMS_external')
+                                    +accorde('Agriculture Resources', 'agri')
+                                    +accorde('Forest Resources', 'forest')
+                                    +accorde('Biogas Resources', 'biogas')
+                                    +accorde('Municipal Solid Waste', 'solid')
+                
 
                             .tab-pane.fade(role="tabpanel" id="legend" aria-labelledby="legend-tab")
                               +legend_boot('Land Cover Layers', 'lulc')
@@ -112,5 +117,5 @@ html(lang="en")
         script(src="js/map.js")
         script(src="js/jquery.js")
         script(src="js/leaflet.js")
-        script(src="js/parseXML.js")
+        //- script(src="js/parseXML.js")
         <!-- endbuild -->

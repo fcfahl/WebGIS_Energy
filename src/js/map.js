@@ -5,9 +5,6 @@ $( document ).ready(function() {
     // Clear local storage data
     localStorage.clear();
     window.map = "";
-    window.group_Flickr = "";
-    window.group_Panoramio = "";
-    window.group_Geograph = "";
 
     // Load JSON database
     $.getJSON( "db.json" )
@@ -16,21 +13,19 @@ $( document ).ready(function() {
             DB_services = data[0].Services,
             DB_WMS = data[0].WMS_Server,
             DB_legend = data[0].Legend;
-            DB_photo = data[0].Photo;
 
-        var LULC_layers = [],
-            LULC_styles = [],
+        var layers = [],
+            styles = [],
+            workspaces = [],
             WMS_server = [];
 
         // console.log(legend[0].GLC_00);
 
-        for (var i = 0; i < data[0].Layers.length; i++) {
-            LULC_layers[i] = DB_layers[i].ID;
+        for (var i = 0; i < DB_layers.length; i++) {
+            layers[i] = DB_layers[i].ID;
+            styles[i] = DB_layers[i].Style;
+            workspaces[i] = DB_layers[i].Workspace;
             // localStorage.setItem(LULC_layers[i], "");
-        }
-
-        for (var j = 0; j < data[0].Services.length; j++) {
-            LULC_styles[j] = DB_services[j].Style;
         }
 
         for (var k = 0; k < data[0].WMS_Server.length; k++) {
@@ -39,11 +34,10 @@ $( document ).ready(function() {
 
 
         // Call functions
-        html_Design (LULC_layers);
-        leaflet_Control (LULC_layers);
-        WMS_Layers (DB_WMS[0], DB_services[0], LULC_layers, LULC_styles);
-        WMS_Custom ();
-        geotag_Photos ();
+        html_Design (layers);
+        leaflet_Control (layers);
+        WMS_Layers (DB_WMS[0], DB_services[0], layers, styles, workspaces);
+        map_Layers ();
 
             // Add JSON to localStorage http://stackoverflow.com/questions/22536620/jquery-posting-json-to-local-file
             // localStorage.setItem("serverData", JSON.stringify(DB_layers));

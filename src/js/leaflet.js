@@ -1,7 +1,7 @@
-function leaflet_Control (LULC_layers) {
+function leaflet_Control (layers) {
 
     // zoom configuration
-    var   southWest = L.latLng(31, -17.5),
+    var  southWest = L.latLng(31, -17.5),
         northEast = L.latLng(72, 45),
         centerView= L.latLng(56, 20),
         zoomLevel = 4;
@@ -65,7 +65,7 @@ function map_Layers () {
 
         var layerClicked = window[event.target.value];
 
-       //  console.log('layerClicked: ' , layerClicked);
+        console.log('layerClicked: ' , layerClicked);
        //  console.log('this for adding: ' , this);
 
         if (map.hasLayer(layerClicked)) {
@@ -76,7 +76,7 @@ function map_Layers () {
     });
 }
 
-function WMS_Object  (id, title, server, service, version, layer, bbox, width, height, CRS, format, transparent, tiled, style, zIndex){
+function WMS_Object (id, title, server, service, version, layer, bbox, width, height, CRS, format, transparent, tiled, style, zIndex){
 
     // create geoserver URL
     var get_Map = server + "?service=" + service + "&version=" + version + "&request=GetMap&layers=" + layer + "&bbox=" + bbox + "&width=" + width + "&height=" + height + "&srs=" +  CRS + "&format=" + format;
@@ -97,195 +97,29 @@ function WMS_Object  (id, title, server, service, version, layer, bbox, width, h
 
     // create Leaflet object
     window[id] = L.tileLayer.wms(server, arg);
-    // console.log(id);
+    console.log("arg: ", arg);
 }
 
-function WMS_Layers (DB_WMS, DB_Service, LULC_layers, LULC_styles) {
+function WMS_Layers (DB_WMS, DB_Service, layers, styles, workspaces) {
     // there is a problem on geoserver to set up a custom style - it seems to shift the color classes for discrete colortables - for this reason it is been using only the defaul raster style
 
-    // loop through LULC_Layers
-    $.each(LULC_layers, function (index, obj) {
 
-        var title = LULC_layers[index],
+    // loop through Layers
+    $.each(layers, function (index, obj) {
+
+        var title = layers[index],
             id = title,
             service = DB_Service.Type,
-            layer = DB_WMS.Workspace + title,
-            style = LULC_styles[index],
-            zIndex = 100 - index;
+            layer = workspaces[index] + ":" + title,
+            style = styles[index],
+            zIndex = 100 - index,
+            server = DB_WMS.Server + workspaces[index] + "/wms";
 
         // Add parameters to object
-        WMS_Object (id, title, DB_WMS.Server, service, DB_WMS.Version, layer, DB_WMS.Bbox, DB_WMS.Width, DB_WMS.Height, DB_WMS.CRS, DB_WMS.Format, DB_WMS.Transparent, DB_WMS.Tiled, style, zIndex);
+        WMS_Object (id, title, server, service, DB_WMS.Version, layer, DB_WMS.Bbox, DB_WMS.Width, DB_WMS.Height, DB_WMS.CRS, DB_WMS.Format, DB_WMS.Transparent, DB_WMS.Tiled, style, zIndex);
+
+        console.log("layer: ", layer);
+        console.log("Workspace[index] : ", workspaces[index] );
 
     });
-}
-
-
-
-function WFS_Layers () {
-
-    //   WFS Implementation
-      //
-      var owsrootUrl = 'http://localhost:8080/geoserver/LULC/ows';
-
-      var defaultParameters = {
-          service : 'WFS',
-          version : '2.0.0',
-          request : 'GetFeature',
-          typeName : 'LULC:paris',
-          outputFormat : 'text/javascript',
-          format_options : 'callback:getJson',
-          SrsName : 'EPSG:3035'
-      };
-
-    //
-    // var Atlas_06 = L.tileLayer.wms(server, {
-    //     layers: 'LULC:Atlas_06',
-    //     format: 'image/png',
-    //     transparent: true,
-    //     version: '1.3.0',
-    //     tiled:true,
-    //     zIndex: "28",
-    //     minZoom: 8
-    // });
-    //
-
-    //     var polyStyle = {
-    //     "color": "#ffffff",
-    //     "weight": 0,
-    //     "fillOpacity": 0.75
-    // };
-    //
-    //
-    var geojsonLayer = new L.GeoJSON();
-
-          function getJson(data) {
-              console.log(data);
-              geojsonLayer.addData(data, {style: polyStyle});
-          }
-
-          $.ajax({
-              url: "http://localhost:8080/geoserver/LULC/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=LULC:NUTS0&maxFeatures=50&outputFormat=json&format_options=callback:getJson",
-              dataType: 'json',
-              jsonpCallback: 'getJson',
-              success: getJson
-          });
-
-          map.addLayer(geojsonLayer);
-
-
-
-
-    function onEachFeature(feature, layer) {
-    // does this feature have a property named dz?
-    if (feature.properties && feature.properties.Country) {
-        layer.bindPopup(feature.properties.Country);
-    }
-    layer.on({
-                    //mouseover: highlightFeature,
-                    //mouseout: resetHighlight,
-                    click: clickfunction
-                });
-    }
-
-
-
-
-
-
-
-    // console.log (URL)
-
-
-
-
-
-    // Create an empty layer where we will load the polygons
-        var featureLayer = new L.GeoJSON();
-        // Set a default style for out the polygons will appear
-        var defaultStyle = {
-            color: "#2262CC",
-            weight: 2,
-            opacity: 0.6,
-            fillOpacity: 0.1,
-            fillColor: "#2262CC"
-        };
-        // Define what happens to each polygon just before it is loaded on to
-        // the map. This is Leaflet's special way of goofing around with your
-        // data, setting styles and regulating user interactions.
-        var onEachFeature = function(feature, layer) {
-            // All we're doing for now is loading the default style.
-            // But stay tuned.
-            layer.setStyle(defaultStyle);
-        };
-        // Add the GeoJSON to the layer. `boundaries` is defined in the external
-        // GeoJSON file that I've loaded in the <head> of this HTML document.
-
-
-
-
-
-        var owsrootUrl = 'http://localhost:8080/geoserver/LULC/ows';
-
-        var defaultParameters = {
-            service : 'WFS',
-            version : '1.0.0',
-            request : 'GetFeature',
-            typeName : 'LULC:NUTS0',
-            outputFormat : 'text/javascript',
-            format_options : 'callback:getJson',
-            SrsName : 'EPSG:3035'
-        };
-
-        var parameters = L.Util.extend(defaultParameters);
-        var URL = owsrootUrl + L.Util.getParamString(parameters);
-
-        function getJson(data) {
-            // console.log(data)
-            var featureLayer = L.geoJson(data, {
-                // And link up the function to run when loading each feature
-                onEachFeature: onEachFeature
-            });
-        }
-
-        // Finally, add the layer to the map.
-        map.addLayer(featureLayer);
-
-        $.ajax({
-            url: URL,
-            dataType: 'jsonp',
-            jsonpCallback: 'getJson',
-            success: getJson
-        });
-
-        var parameters = L.Util.extend(defaultParameters);
-
-        var URL = owsrootUrl + L.Util.getParamString(parameters);
-
-        var ajax = $.ajax({
-            url : URL,
-            dataType : 'jsonp',
-            jsonpCallback : 'parseResponse',
-            success : WFSLayer
-        });
-
-        function WFSLayer(data) {
-
-        var fuffi= L.geoJson(data, {
-        style: function (feature) {
-            return {color: 'black',
-                fillColor: '#ff0000',
-                fillOpacity: 0.10};
-            }
-        }).addTo(map);
-
-         // loading indicator end
-         currentControl.removeClass('disabled');
-                        text.css('visibility', 'visible');
-                        indicator.css('display', 'none');
-            loadMore.fadeOut(2500);
-        // loading indicator end
-        map.fitBounds(fuffi.getBounds());
-        }
-
-
 }
